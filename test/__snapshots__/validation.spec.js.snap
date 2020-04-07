@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Validations Should reject if a group attempts to consume commands it has not registered for 1`] = `"Group validationD attempted to consume commands that were not registered for this group in the topology: notathing"`;
+
+exports[`Validations Should reject if a group attempts to consume events it has not registered for 1`] = `"Group validationD attempted to consume events that were not registered for this group in the topology: notathing"`;
+
+exports[`Validations Should reject if any of the registered commands for a group are not consumed 1`] = `"Group validationC did not provide a handler for commands that were registered for this group in the toplogy: validationCommand"`;
+
+exports[`Validations Should reject if any of the registered events for a group are not consumed 1`] = `"Group validationB did not provide a handler for events that were registered for this group in the toplogy: validationEvent"`;
+
+exports[`Validations Should reject if attempting to consume a command as an event 1`] = `"Group validationC attempted to consume events that were not registered for this group in the topology: validationCommand"`;
+
+exports[`Validations Should reject if attempting to consume an event as a command 1`] = `"Group validationB attempted to consume commands that were not registered for this group in the topology: validationEvent"`;
+
+exports[`Validations Should reject if attempting to send a command as an event 1`] = `"This event does not exist in the topology: validationCommand"`;
+
+exports[`Validations Should reject if attempting to send an event as a command 1`] = `"This command does not exist in the topology: validationEvent"`;
+
+exports[`Validations Should reject if attempting to send commands that are not registered 1`] = `"This command does not exist in the topology: notathing"`;
+
+exports[`Validations Should reject if attempting to send events that are not registered 1`] = `"This event does not exist in the topology: notathing"`;
+
+exports[`Validations Should reject if group name doesn't exist in topology 1`] = `"Attempted to setup consumers for unregistered group: notagroup"`;
+
+exports[`Validations Should throw if command payload is not a string or Buffer 1`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if command payload is not a string or Buffer 2`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if command payload is not a string or Buffer 3`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if command payload is not a string or Buffer 4`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if connectionUrls isn't valid 1`] = `"connectionUrls must be an array of strings."`;
+
+exports[`Validations Should throw if connectionUrls isn't valid 2`] = `"connectionUrls must be an array of strings."`;
+
+exports[`Validations Should throw if connectionUrls isn't valid 3`] = `"connectionUrls must be an array of strings."`;
+
+exports[`Validations Should throw if event payload is not a string or Buffer 1`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if event payload is not a string or Buffer 2`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if event payload is not a string or Buffer 3`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if event payload is not a string or Buffer 4`] = `"Message must be a string or Buffer."`;
+
+exports[`Validations Should throw if topology isn't valid 1`] = `"topology must be an object, where every property has the following type: { events: ['string'], commands: ['string'] }. Either array may be empty."`;
+
+exports[`Validations Should throw if topology isn't valid 2`] = `"topology must be an object, where every property has the following type: { events: ['string'], commands: ['string'] }. Either array may be empty."`;
+
+exports[`Validations Should throw if topology isn't valid 3`] = `"topology must be an object, where every property has the following type: { events: ['string'], commands: ['string'] }. Either array may be empty."`;
+
+exports[`Validations Should throw if topology isn't valid 4`] = `"topology must be an object, where every property has the following type: { events: ['string'], commands: ['string'] }. Either array may be empty."`;

@@ -1,0 +1,53 @@
+{
+  "name": "carrotstiqs",
+  "version": "0.0.0",
+  "description": "A declarative API for asynchronous messaging with RabbitMQ",
+  "main": "dist/index.js",
+  "scripts": {
+    "postinstall": "yarn run build",
+    "build": "rm -rf dist && babel src --copy-files --out-dir dist && flow-copy-source src/ dist/",
+    "test": "jest --coverage --no-cache --runInBand --verbose",
+    "benchmark": "yarn build && node ./benchmarks/index.js"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nathan-Schwartz/CarrotStiqs.git"
+  },
+  "dependencies": {
+    "amqp-connection-manager": "^2.2.0",
+    "amqplib": "^0.5.2",
+    "bluebird": "^3.5.2",
+    "es6-error": "^4.1.1",
+    "lodash.curry": "^4.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "@babel/preset-flow": "^7.0.0",
+    "babel-jest": "24.8.0",
+    "benchmarkify": "^2.1.0",
+    "flow-bin": "^0.81.0",
+    "flow-copy-source": "^2.0.2",
+    "flow-typed": "^2.5.1",
+    "jest": "24.8.0"
+  },
+  "jest": {
+    "setupFilesAfterEnv": ["./test/jest.setup.js"],
+    "coverageDirectory": "./coverage",
+    "testURL": "http://localhost/",
+    "collectCoverageFrom": [
+      "src/**"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/benchmarks/",
+      "/test/"
+    ]
+  }
+}
