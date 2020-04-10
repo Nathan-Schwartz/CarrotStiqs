@@ -1,12 +1,21 @@
 [ignore]
+node_modules
 
 [include]
 
 [libs]
-flow-typed
+flow-typed/
+
+[untyped]
 
 [lints]
 
 [options]
-
-[strict]
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable
+esproposal.export_star_as=enable
+module.ignore_non_literal_requires=true
+suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+server.max_workers=2
+sharedmemory.hash_table_pow=21

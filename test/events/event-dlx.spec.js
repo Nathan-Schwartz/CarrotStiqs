@@ -1,4 +1,4 @@
-const { handlerTestEnhancer } = require('../util');
+const { clearAllMessages, handlerTestEnhancer } = require('../util');
 
 const createCarrotStiqsClient = require('../../src/carrotstiqs');
 
@@ -11,16 +11,21 @@ const {
 } = require('./util');
 
 describe('Events Dead Letter Exchange', () => {
-  it('Should insert the default dead letter config when undefined', () => {
+  it('Should insert the default dead letter config when undefined', async () => {
     expect.assertions(2);
-
-    const defaultDLXClient = createCarrotStiqsClient({
-      connectionUrls,
-      logger: { log: () => {}, error: () => {}, warn: () => {} },
-      topology: Object.assign({}, topology, {
-        'post-mortem': { commands: ['dead-letter'], events: [] },
-      }),
+    const moddedTopology = Object.assign({}, topology, {
+      'post-mortem': { commands: ['dead-letter'], events: [] },
     });
+
+    const createClient = () =>
+      createCarrotStiqsClient({
+        connectionUrls,
+        logger: { log: () => {}, error: () => {}, warn: () => {} },
+        topology: moddedTopology,
+      });
+
+    const defaultDLXClient = createClient();
+    await clearAllMessages(createClient, moddedTopology);
 
     return new Promise(async (res, rej) => {
       const testMessage = 'one event';

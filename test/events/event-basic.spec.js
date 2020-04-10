@@ -1,7 +1,7 @@
-const { handlerTestEnhancer } = require('../util');
+const { clearAllMessages, handlerTestEnhancer } = require('../util');
 
 const {
-  waitFor,
+  topology,
   group1,
   event1,
   clearGroup2AndGroup3,
@@ -12,15 +12,14 @@ describe('Events General Behavior', () => {
   let client = createNewClient();
   // We wait in order to avoid inconsistent errors closing channels.
   beforeEach(() => {
-    return waitFor(500)
-      .then(() => client.close())
-      .then(() => {
-        client = createNewClient();
-      });
+    return client.close().then(() => {
+      client = createNewClient();
+      return clearAllMessages(createNewClient, topology);
+    });
   });
 
   afterAll(() => {
-    return waitFor(500).then(() => client.close());
+    return client.close();
   });
 
   it('Should be able to send and receive an event (string)', () => {
@@ -367,10 +366,14 @@ describe('Events General Behavior', () => {
           firstHandlerCount + secondHandlerCount + thirdHandlerCount ===
           messageCount
         ) {
-          expect(firstHandlerCount).toEqual(10);
-          expect(secondHandlerCount).toEqual(0);
-          expect(thirdHandlerCount).toEqual(0);
-          res();
+          try {
+            expect(firstHandlerCount).toEqual(10);
+            expect(secondHandlerCount).toEqual(0);
+            expect(thirdHandlerCount).toEqual(0);
+            res();
+          } catch (e) {
+            rej(e);
+          }
         }
       };
 
@@ -462,10 +465,14 @@ describe('Events General Behavior', () => {
             firstHandlerCount + secondHandlerCount + thirdHandlerCount ===
             messageCount
           ) {
-            expect(firstHandlerCount).toBeGreaterThan(0);
-            expect(secondHandlerCount).toBeGreaterThan(0);
-            expect(thirdHandlerCount).toBeGreaterThan(0);
-            res();
+            try {
+              expect(firstHandlerCount).toBeGreaterThan(0);
+              expect(secondHandlerCount).toBeGreaterThan(0);
+              expect(thirdHandlerCount).toBeGreaterThan(0);
+              res();
+            } catch (e) {
+              rej(e);
+            }
           }
         };
 
@@ -533,7 +540,9 @@ describe('Events General Behavior', () => {
       })
         // After the messages are all resolved we want to clean up the clients
         .then(cleanupExtraClients)
-        .catch(error => cleanupExtraClients().then(() => Promise.reject(error)))
+        .catch((error) =>
+          cleanupExtraClients().then(() => Promise.reject(error)),
+        )
     );
   });
 

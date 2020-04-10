@@ -21,20 +21,20 @@ function wrappedSendMethods({
   topology,
   topologyState,
   deadLetterConfig,
-}: {
+}: {|
   channels: Array<*>,
   deadLetterConfig: DeadLetterConfigSafeType | boolean,
   logger: LoggerType,
   publisherConnection: *,
   topology: TopologyType,
   topologyState: TopologyStateType,
-}): {|
+|}): {|
   sendCommand: (destination: string, message: string) => Promise<mixed>,
   sendEvent: (destination: string, message: string) => Promise<mixed>,
 |} {
   // These are used in the send method for sanity checking
   const eventMap: { [event: string]: true } = Object.keys(topology)
-    .map(groupName => topology[groupName])
+    .map((groupName) => topology[groupName])
     .reduce((acc, group: TopologyItemType) => {
       acc = acc.concat(group.events);
       return acc;
@@ -47,7 +47,7 @@ function wrappedSendMethods({
     }, {});
 
   const commandMap: { [command: string]: true } = Object.keys(topology)
-    .map(groupName => topology[groupName])
+    .map((groupName) => topology[groupName])
     .reduce((acc, group: TopologyItemType) => {
       acc = acc.concat(group.commands);
       return acc;
@@ -65,13 +65,13 @@ function wrappedSendMethods({
 
   // Send all pending events and commands after topology is asserted
   topologyState.promise.then(() => {
-    offlineEvents.map(event => {
+    offlineEvents.map((event) => {
       sendEvent(event.destination, event.message, event.options)
         .then(event.res)
         .catch(event.rej);
     });
 
-    offlineCommands.map(command => {
+    offlineCommands.map((command) => {
       sendCommand(command.destination, command.message, command.options)
         .then(command.res)
         .catch(command.rej);
@@ -82,7 +82,7 @@ function wrappedSendMethods({
   // Publisher setup
   //
   const publisherChannel = publisherConnection.createChannel({
-    setup: function() {},
+    setup: function () {},
   });
 
   channels.push(publisherChannel);

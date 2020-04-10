@@ -1,0 +1,7 @@
+version: '2'
+services:
+
+  carrotstiqs-rabbitmq:
+    extends:
+      file: docker/docker-compose.base.yml
+      service: carrotstiqs-rabbitmq

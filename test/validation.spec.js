@@ -1,8 +1,6 @@
 const createCarrotStiqsClient = require('../src/carrotstiqs');
 const { CarrotStiqsError } = require('../src/util');
 
-const waitFor = ms => new Promise(res => setTimeout(res, ms));
-
 const topology = {
   validationA: {
     events: ['validationEvent'],
@@ -38,15 +36,13 @@ describe('Validations', () => {
 
   // We wait in order to avoid inconsistent errors closing channels.
   beforeEach(() => {
-    return waitFor(500)
-      .then(() => client.close())
-      .then(() => {
-        client = createNewClient();
-      });
+    return client.close().then(() => {
+      client = createNewClient();
+    });
   });
 
   afterAll(() => {
-    return waitFor(500).then(() => client.close());
+    return client.close();
   });
 
   it("Should throw if topology isn't valid", async () => {
@@ -137,7 +133,7 @@ describe('Validations', () => {
 
     return client
       .initializeConsumerGroup('notagroup', { events: {}, commands: {} })
-      .catch(err => {
+      .catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       });
@@ -168,7 +164,7 @@ describe('Validations', () => {
           },
         })
         .then(() => {
-          client.sendCommand('dead-letter', 'will be rejected').catch(err => {
+          client.sendCommand('dead-letter', 'will be rejected').catch((err) => {
             expect(err).toBeInstanceOf(CarrotStiqsError);
             res();
           });
@@ -185,7 +181,7 @@ describe('Validations', () => {
         events: {},
         commands: {},
       })
-      .catch(err => {
+      .catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       });
@@ -199,7 +195,7 @@ describe('Validations', () => {
         events: {},
         commands: {},
       })
-      .catch(err => {
+      .catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       });
@@ -213,7 +209,7 @@ describe('Validations', () => {
         events: { notathing: { prefetch: 1, handler: async () => {} } },
         commands: {},
       })
-      .catch(err => {
+      .catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       });
@@ -232,7 +228,7 @@ describe('Validations', () => {
           },
         },
       })
-      .catch(err => {
+      .catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       });
@@ -240,7 +236,7 @@ describe('Validations', () => {
 
   it('Should reject if attempting to send an event as a command', () => {
     expect.assertions(2);
-    return client.sendCommand('validationEvent', 'payload').catch(err => {
+    return client.sendCommand('validationEvent', 'payload').catch((err) => {
       expect(err).toBeInstanceOf(CarrotStiqsError);
       expect(err.message).toMatchSnapshot();
     });
@@ -248,7 +244,7 @@ describe('Validations', () => {
 
   it('Should reject if attempting to send a command as an event', () => {
     expect.assertions(2);
-    return client.sendEvent('validationCommand', 'payload').catch(err => {
+    return client.sendEvent('validationCommand', 'payload').catch((err) => {
       expect(err).toBeInstanceOf(CarrotStiqsError);
       expect(err.message).toMatchSnapshot();
     });
@@ -271,7 +267,7 @@ describe('Validations', () => {
           },
         },
       })
-      .catch(err => {
+      .catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       });
@@ -294,7 +290,7 @@ describe('Validations', () => {
           },
         },
       })
-      .catch(err => {
+      .catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       });
@@ -303,7 +299,7 @@ describe('Validations', () => {
   it('Should reject if attempting to send events that are not registered', () => {
     expect.assertions(2);
 
-    return client.sendEvent('notathing', 'payload').catch(err => {
+    return client.sendEvent('notathing', 'payload').catch((err) => {
       expect(err).toBeInstanceOf(CarrotStiqsError);
       expect(err.message).toMatchSnapshot();
     });
@@ -312,7 +308,7 @@ describe('Validations', () => {
   it('Should reject if attempting to send commands that are not registered', () => {
     expect.assertions(2);
 
-    return client.sendCommand('notathing', 'payload').catch(err => {
+    return client.sendCommand('notathing', 'payload').catch((err) => {
       expect(err).toBeInstanceOf(CarrotStiqsError);
       expect(err.message).toMatchSnapshot();
     });
@@ -322,19 +318,19 @@ describe('Validations', () => {
     expect.assertions(8);
 
     return Promise.all([
-      client.sendEvent('validationEvent', undefined).catch(err => {
+      client.sendEvent('validationEvent', undefined).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),
-      client.sendEvent('validationEvent', null).catch(err => {
+      client.sendEvent('validationEvent', null).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),
-      client.sendEvent('validationEvent', {}).catch(err => {
+      client.sendEvent('validationEvent', {}).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),
-      client.sendEvent('validationEvent', []).catch(err => {
+      client.sendEvent('validationEvent', []).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),
@@ -345,19 +341,19 @@ describe('Validations', () => {
     expect.assertions(8);
 
     return Promise.all([
-      client.sendCommand('validationCommand', undefined).catch(err => {
+      client.sendCommand('validationCommand', undefined).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),
-      client.sendCommand('validationCommand', null).catch(err => {
+      client.sendCommand('validationCommand', null).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),
-      client.sendCommand('validationCommand', {}).catch(err => {
+      client.sendCommand('validationCommand', {}).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),
-      client.sendCommand('validationCommand', []).catch(err => {
+      client.sendCommand('validationCommand', []).catch((err) => {
         expect(err).toBeInstanceOf(CarrotStiqsError);
         expect(err.message).toMatchSnapshot();
       }),

@@ -1,7 +1,5 @@
 const createCarrotStiqsClient = require('../../src/carrotstiqs');
 
-const waitFor = ms => new Promise(res => setTimeout(res, ms));
-
 const group1 = 'command-group-1';
 const group2 = 'command-group-2';
 const group3 = 'command-group-3';
@@ -49,5 +47,4 @@ module.exports = {
   group3,
   group4,
   topology,
-  waitFor,
 };

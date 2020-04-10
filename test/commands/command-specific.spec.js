@@ -1,6 +1,7 @@
-const { handlerTestEnhancer } = require('../util');
+const { clearAllMessages, handlerTestEnhancer } = require('../util');
 
 const {
+  topology,
   command1,
   command2,
   createNewClient,
@@ -8,7 +9,6 @@ const {
   group2,
   group3,
   group4,
-  waitFor,
 } = require('./util');
 
 describe('Commands Specific Behavior', () => {
@@ -16,15 +16,14 @@ describe('Commands Specific Behavior', () => {
 
   // We wait in order to avoid inconsistent errors closing channels.
   beforeEach(() => {
-    return waitFor(500)
-      .then(() => client.close())
-      .then(() => {
-        client = createNewClient();
-      });
+    return client.close().then(() => {
+      client = createNewClient();
+      return clearAllMessages(createNewClient, topology);
+    });
   });
 
   afterAll(() => {
-    return waitFor(500).then(() => client.close());
+    return client.close();
   });
 
   it.skip('Should deliver commands multiple times if nacked, but may only be successfully processed once', () => {
@@ -59,13 +58,17 @@ describe('Commands Specific Behavior', () => {
           ) {
             setTimeout(() => {
               // delaying assertions to allow any stragglers to be processed
-              expect(firstHandlerCount).toBeGreaterThan(0);
-              expect(secondHandlerCount).toBeGreaterThan(0);
-              expect(thirdHandlerCount).toBeGreaterThan(0);
-              expect(
-                firstHandlerCount + secondHandlerCount + thirdHandlerCount,
-              ).toEqual(messageCount);
-              res();
+              try {
+                expect(firstHandlerCount).toBeGreaterThan(0);
+                expect(secondHandlerCount).toBeGreaterThan(0);
+                expect(thirdHandlerCount).toBeGreaterThan(0);
+                expect(
+                  firstHandlerCount + secondHandlerCount + thirdHandlerCount,
+                ).toEqual(messageCount);
+                res();
+              } catch (e) {
+                rej(e);
+              }
             }, 500);
           }
         };
@@ -140,7 +143,9 @@ describe('Commands Specific Behavior', () => {
       })
         // After the messages are all resolved we want to clean up the clients
         .then(cleanupExtraClients)
-        .catch(error => cleanupExtraClients().then(() => Promise.reject(error)))
+        .catch((error) =>
+          cleanupExtraClients().then(() => Promise.reject(error)),
+        )
     );
   });
 
@@ -195,7 +200,9 @@ describe('Commands Specific Behavior', () => {
       })
         // After the messages are all resolved we want to clean up the clients
         .then(cleanupExtraClients)
-        .catch(error => cleanupExtraClients().then(() => Promise.reject(error)))
+        .catch((error) =>
+          cleanupExtraClients().then(() => Promise.reject(error)),
+        )
     );
   });
 
@@ -223,20 +230,28 @@ describe('Commands Specific Behavior', () => {
                     rej,
                     async ({ message, acknowledgeMessage }) => {
                       setTimeout(() => {
-                        expect(message).toEqual(testMessage);
+                        try {
+                          expect(message).toEqual(testMessage);
 
-                        // Increment counters
-                        messageCounter += 1;
+                          // Increment counters
+                          messageCounter += 1;
 
-                        // Acknowledge the message
-                        acknowledgeMessage();
+                          // Acknowledge the message
+                          acknowledgeMessage();
 
-                        // If all messages are done being delivered, wait for any extras and then run assertions
-                        if (messageCount === messageCounter) {
-                          setTimeout(() => {
-                            expect(messageCounter).toEqual(messageCount);
-                            res();
-                          }, 100);
+                          // If all messages are done being delivered, wait for any extras and then run assertions
+                          if (messageCount === messageCounter) {
+                            setTimeout(() => {
+                              try {
+                                expect(messageCounter).toEqual(messageCount);
+                                res();
+                              } catch (e) {
+                                rej(e);
+                              }
+                            }, 100);
+                          }
+                        } catch (e) {
+                          rej(e);
                         }
                       }, 20);
                     },

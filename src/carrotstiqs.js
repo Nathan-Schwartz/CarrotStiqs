@@ -31,13 +31,13 @@ module.exports = function createCarrotStiqsClient({
   logger = console, // eslint-disable no-console
   topology,
   deadLetterConfig,
-}: {
+}: {|
   connectionUrls: Array<string>,
   deadLetterConfig: DeadLetterConfigInputType | false,
   disableRetryQueues?: boolean,
   logger: LoggerType,
   topology: TopologyType,
-}): ClientMethodsType {
+|}): ClientMethodsType {
   if (!isValidConnectionUrls(connectionUrls)) {
     throw new CarrotStiqsError('connectionUrls must be an array of strings.');
   }
@@ -60,7 +60,7 @@ module.exports = function createCarrotStiqsClient({
   let dlConfig;
   const defaultDeadLetterConfig = {
     commandName: 'dead-letter',
-    deadLetterRoutingKey: queueName => queueName,
+    deadLetterRoutingKey: (queueName) => queueName,
     disableSendingToDLX: true,
   };
 
@@ -98,7 +98,7 @@ module.exports = function createCarrotStiqsClient({
   ) {
     cb()
       .then(() => successCb())
-      .catch(error => {
+      .catch((error) => {
         const wait = Math.pow(2, retryCount <= 8 ? retryCount : 8);
         logger.error(
           `[CarrotStiqs] Asserting topology failed with the following error, will retry in ${wait} seconds.`,
@@ -108,10 +108,10 @@ module.exports = function createCarrotStiqsClient({
       });
   }
 
-  const topologyState = (function(): TopologyStateType {
+  const topologyState = (function (): TopologyStateType {
     const state = { asserted: false, promise: Promise.resolve() };
 
-    state.promise = new Promise(res => {
+    state.promise = new Promise((res) => {
       retry(
         () =>
           assertTopology({
@@ -167,7 +167,7 @@ module.exports = function createCarrotStiqsClient({
 
   return {
     close: () =>
-      Promise.all(channels.map(c => c.close()))
+      Promise.all(channels.map((c) => c.close()))
         .then(() =>
           Promise.all([
             consumerConnection.close(),

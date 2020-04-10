@@ -14,8 +14,8 @@ function logConnectionEvents(
   logger: LoggerType,
 ) {
   const events = ['blocked', 'unblocked', 'disconnect', 'connect'];
-  events.forEach(event => {
-    connection.on(event, data => {
+  events.forEach((event) => {
+    connection.on(event, (data) => {
       if (data) {
         const clone = Object.assign({}, data);
         delete clone.connection;
@@ -37,7 +37,7 @@ function logChannelEvents(
   logger: LoggerType,
 ) {
   const events = ['error', 'close', 'connect', 'drain'];
-  events.forEach(event => {
+  events.forEach((event) => {
     channel.on(event, (error, data) => {
       if (event === 'error') {
         logger.log(
@@ -58,7 +58,7 @@ function logChannelEvents(
 const isValidConnectionUrls = (connectionUrls: any): boolean =>
   Array.isArray(connectionUrls) &&
   connectionUrls.length > 0 &&
-  connectionUrls.every(c => typeof c === 'string');
+  connectionUrls.every((c) => typeof c === 'string');
 
 // eslint-disable-next-line flowtype/no-weak-types
 const isValidTopology = (topology: any): boolean => {
@@ -68,9 +68,9 @@ const isValidTopology = (topology: any): boolean => {
 
   // eslint-disable-next-line flowtype/no-weak-types
   const isValidCommandOrEvent = (arr: any): boolean =>
-    Array.isArray(arr) && arr.every(c => typeof c === 'string');
+    Array.isArray(arr) && arr.every((c) => typeof c === 'string');
 
-  return Object.keys(topology).every(groupName => {
+  return Object.keys(topology).every((groupName) => {
     const group = topology[groupName];
     if (!group || typeof group !== 'object') return false;
 
@@ -81,11 +81,12 @@ const isValidTopology = (topology: any): boolean => {
   });
 };
 
+// eslint-disable-next-line flowtype/no-weak-types
 const isValidDeadLetterConfig = (topology: any, config: any): boolean => {
   if (config.commandName) {
-    return Object.keys(topology).some(groupName =>
+    return Object.keys(topology).some((groupName) =>
       topology[groupName].commands.some(
-        command => command === config.commandName,
+        (command) => command === config.commandName,
       ),
     );
   }

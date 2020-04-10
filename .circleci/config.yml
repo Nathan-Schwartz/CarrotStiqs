@@ -1,0 +1,47 @@
+version: 2.0
+
+jobs:
+  setup_docker:
+    description: Start RabbitMQ container
+    steps:
+      - setup_remote_docker:
+          version: 18.06.0-ce
+      - run:
+          name: Verify Docker Works
+          command: |
+            docker --version
+            docker run hello-world
+      - run:
+          name: Docker Compose Up
+          command: docker-compose -f docker/docker-compose.ci.yml up -d --build
+
+  install:
+    steps:
+      - yarn install
+  run_tests:
+    steps:
+      - run: docker exec -i carrotstiqs bash -c "yarn run test"
+  check_types:
+    steps:
+      - run: yarn run flow
+  check_linting:
+    steps:
+      - run: yarn run lint
+
+workflows:
+  version: 2
+
+  PR_pipeline:
+    jobs:
+      - install
+      - check_linting:
+          requires:
+            - install
+      - check_types:
+          requires:
+
+      # - setup_docker
+      # - run_tests:
+      #     requires:
+      #       - install
+      #       - setup_docker
