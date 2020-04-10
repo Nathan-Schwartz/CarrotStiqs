@@ -7,18 +7,15 @@ $ npm i carrotstiqs
 ```
 
 ### Highlights
-- Three concepts: consumer groups, events, and commands.
 - Two message types:
   - Commands: Each message is processed successfully (at least) **once** and is load balanced across consumers.
   - Events: Each message is processed successfully (at least) **once per consumer group** and is load balanced across consumers.
 - Consumer Groups: Declare which events and commands they will consume. Any group can send any event or command. If multiple groups subscribe to an event A, each consumer group will receive all future "A" events.
 - Shared topology for all clients. This protects against message loss in the case that one client is publishing before other clients have asserted their queues.
-- Discover common issues quickly during development. Validation protects against:
-  - Using a misspelled consumer group name
-  - consuming a misspelled event or command
-  - Sending misspelled events or commands
+- Discover common issues quickly during development:
+  - Misspellings of consumer group name, events, and commands
   - Forgetting to consume messages for a registered command/event
--  We use [node-amqp-connection-manager](https://github.com/benbria/node-amqp-connection-manager) for reconnection and offline queueing
+- Reliably delivers message regardless of client crashes, AMQP broker crashes, or network otuuages
 
 
 ### Assumptions
@@ -126,17 +123,13 @@ This library was inspired in part by [rabbot](https://github.com/arobson/rabbot/
 Originally authored by Nathan Schwartz and Taylor King as part of their work on the Merlin Platform.
 
 
-### Roadmap
-- [ ] Version exchanges and queues
-- [ ] Support earlier Node versions
-- [ ] Check for special RabbitMQ characters in event and command names
-- [ ] Delete queues and exchanges between test suites
-- [ ] Introduce "strict mode", which defaults to true. Opting out would bypass most validations
-- [ ] Forward connection configurations to amqp-connection-manager
-- [ ] Reassert topology on reconnection?
-- [ ] Set up dead letter queues for queues when discardMessage is used
-- [ ] Slow handler detection with the ability to cancel processing
-- [ ] More sophisticated retry strategies
-- [ ] Ack batching like [rabbot](https://github.com/arobson/rabbot/)
-- [ ] Publish on npm
-- [ ] Test the not-so-happy paths. Not sure how to do this in the integration tests.
+### Enhancement ideas
+- Check for special RabbitMQ characters in event and command names
+- Allow full connection objects (socketOptions) to be passed to amqp-connection-manager
+- Identify and manage slow connsumers
+- Streamline testing approach and write more integration tests
+- Delete queues and exchanges between test suites instead of running a temp client
+- Support earlier Node versions
+- Version exchanges and queues
+- Introduce "strict mode", which defaults to true. Opting out would bypass most validations
+- Ack batching like [rabbot](https://github.com/arobson/rabbot/)

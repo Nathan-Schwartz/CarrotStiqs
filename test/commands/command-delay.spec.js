@@ -1,4 +1,4 @@
-const { handlerTestEnhancer } = require('../util');
+const { clearAllMessages, handlerTestEnhancer } = require('../util');
 
 const createCarrotStiqsClient = require('../../src/carrotstiqs');
 
@@ -8,7 +8,6 @@ const {
   createNewClient,
   group1,
   topology,
-  waitFor,
 } = require('./util');
 
 describe('Commands Delayed Retries', () => {
@@ -16,15 +15,14 @@ describe('Commands Delayed Retries', () => {
 
   // We wait in order to avoid inconsistent errors closing channels.
   beforeEach(() => {
-    return waitFor(500)
-      .then(() => client.close())
-      .then(() => {
-        client = createNewClient();
-      });
+    return client.close().then(() => {
+      client = createNewClient();
+      return clearAllMessages(createNewClient, topology);
+    });
   });
 
   afterAll(() => {
-    return waitFor(500).then(() => client.close());
+    return client.close();
   });
 
   it('Should expose delayedRetryMessage to the handler if disableRetryQueues is false', () => {

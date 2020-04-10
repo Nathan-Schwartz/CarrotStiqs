@@ -1,20 +1,27 @@
-const { handlerTestEnhancer } = require('../util');
+const { clearAllMessages, handlerTestEnhancer } = require('../util');
 
 const createCarrotStiqsClient = require('../../src/carrotstiqs');
 
 const { command1, connectionUrls, topology, group1 } = require('./util');
 
 describe('Commands Dead Letter Exchange', () => {
-  it('Should insert the default dead letter config when undefined', () => {
+  it('Should insert the default dead letter config when undefined', async () => {
     expect.assertions(2);
 
-    const defaultDLXClient = createCarrotStiqsClient({
-      connectionUrls,
-      logger: { log: () => {}, error: () => {}, warn: () => {} },
-      topology: Object.assign({}, topology, {
-        'post-mortem': { commands: ['dead-letter'], events: [] },
-      }),
+    const moddedTopology = Object.assign({}, topology, {
+      'post-mortem': { commands: ['dead-letter'], events: [] },
     });
+
+    const createNewClient = () =>
+      createCarrotStiqsClient({
+        connectionUrls,
+        logger: { log: () => {}, error: () => {}, warn: () => {} },
+        topology: moddedTopology,
+      });
+
+    const defaultDLXClient = createNewClient();
+
+    await clearAllMessages(createNewClient, moddedTopology);
 
     return new Promise(async (res, rej) => {
       const testMessage = 'one command';
@@ -59,19 +66,26 @@ describe('Commands Dead Letter Exchange', () => {
 
   it('Should allow sending to dead letter command if it is enabled', async () => {
     expect.assertions(1);
-    const enableSendingToDLX = createCarrotStiqsClient({
-      connectionUrls,
-      logger: { log: () => {}, error: () => {}, warn: () => {} },
-      topology: {
-        'post-mortem': {
-          commands: ['dead-letter'],
-          events: [],
+
+    const topology = {
+      'post-mortem': {
+        commands: ['dead-letter'],
+        events: [],
+      },
+    };
+    const createNewClient = () =>
+      createCarrotStiqsClient({
+        connectionUrls,
+        logger: { log: () => {}, error: () => {}, warn: () => {} },
+        topology,
+        deadLetterConfig: {
+          disableSendingToDLX: false,
         },
-      },
-      deadLetterConfig: {
-        disableSendingToDLX: false,
-      },
-    });
+      });
+
+    const enableSendingToDLX = createNewClient();
+
+    await clearAllMessages(createNewClient, topology);
 
     const testMessage = 'will not be rejected';
 
@@ -97,20 +111,26 @@ describe('Commands Dead Letter Exchange', () => {
     }).then(() => enableSendingToDLX.close());
   });
 
-  it('Should use custom command name as the dead letter exchange/queue', () => {
+  it('Should use custom command name as the dead letter exchange/queue', async () => {
     expect.assertions(2);
 
-    const customDeadLetterClient = createCarrotStiqsClient({
-      connectionUrls,
-      logger: { log: () => console, error: () => {}, warn: () => {} },
-      topology: {
-        'post-mortem': { commands: ['nathan'], events: [] },
-        alive: { commands: ['alive-command'], events: [] },
-      },
-      deadLetterConfig: {
-        commandName: 'nathan',
-      },
-    });
+    const topology = {
+      'post-mortem': { commands: ['nathan'], events: [] },
+      alive: { commands: ['alive-command'], events: [] },
+    };
+
+    const createNewClient = () =>
+      createCarrotStiqsClient({
+        connectionUrls,
+        logger: { log: () => console, error: () => {}, warn: () => {} },
+        topology,
+        deadLetterConfig: {
+          commandName: 'nathan',
+        },
+      });
+
+    const customDeadLetterClient = createNewClient();
+    await clearAllMessages(createNewClient, topology);
 
     return new Promise((res, rej) => {
       const testMessage = 'one command';

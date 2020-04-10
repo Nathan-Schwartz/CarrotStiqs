@@ -28,19 +28,19 @@ function assertTopology({
   logger,
   topology,
   deadLetterConfig,
-}: {
+}: {|
   consumerConnection: *,
   deadLetterConfig: DeadLetterConfigSafeType | boolean,
   disableRetryQueues: boolean,
   logger: LoggerType,
   topology: TopologyType,
-}): Promise<void> {
+|}): Promise<void> {
   return new Promise((res, rej) => {
     // We create a channel just to assert the topology and then close it
     // We assign channel to a ref so that it can be closed properly from within setup function
     const ref = { channel: null };
     ref.channel = consumerConnection.createChannel({
-      setup: async function(channel: ConfirmChannel): Promise<void> {
+      setup: async function (channel: ConfirmChannel): Promise<void> {
         // We use a lot of Promise.alls because a significant amount of the assertions can be done concurrently
 
         if (!disableRetryQueues) {
@@ -93,12 +93,12 @@ function assertTopology({
         }
 
         return Promise.all(
-          Object.keys(topology).map(groupName => {
+          Object.keys(topology).map((groupName) => {
             const group = topology[groupName];
 
             return Promise.all([
               Promise.all(
-                group.events.map(event => {
+                group.events.map((event) => {
                   const namespacedEvent = `event.${event}`;
                   const namespacedGroupedEvent = `event.${groupName}.${event}`;
                   const queueOptions = {};
@@ -158,7 +158,7 @@ function assertTopology({
                 }),
               ),
               Promise.all(
-                group.commands.map(command => {
+                group.commands.map((command) => {
                   const namespacedCommand = `command.${command}`;
                   const queueOptions = {};
 

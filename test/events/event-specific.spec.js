@@ -1,7 +1,7 @@
-const { handlerTestEnhancer } = require('../util');
+const { clearAllMessages, handlerTestEnhancer } = require('../util');
 
 const {
-  waitFor,
+  topology,
   group1,
   group2,
   group3,
@@ -17,15 +17,14 @@ describe('Event specific behavior', () => {
   let client = createNewClient();
   // We wait in order to avoid inconsistent errors closing channels.
   beforeEach(() => {
-    return waitFor(500)
-      .then(() => client.close())
-      .then(() => {
-        client = createNewClient();
-      });
+    return client.close().then(() => {
+      client = createNewClient();
+      return clearAllMessages(createNewClient, topology);
+    });
   });
 
   afterAll(() => {
-    return waitFor(500).then(() => client.close());
+    return client.close();
   });
 
   it.skip('should behave like a command if there is only one consuming group', () => {
@@ -63,11 +62,14 @@ describe('Event specific behavior', () => {
             messageCount === groupCounters[3]
           ) {
             setTimeout(() => {
-              expect(groupCounters[1]).toEqual(messageCount);
-              expect(groupCounters[2]).toEqual(messageCount);
-              expect(groupCounters[3]).toEqual(messageCount);
-
-              res();
+              try {
+                expect(groupCounters[1]).toEqual(messageCount);
+                expect(groupCounters[2]).toEqual(messageCount);
+                expect(groupCounters[3]).toEqual(messageCount);
+                res();
+              } catch (e) {
+                rej(e);
+              }
             }, 100);
           }
         }, 20);
@@ -173,32 +175,40 @@ describe('Event specific behavior', () => {
 
         function handleMessage({ group, client, acknowledgeMessage, message }) {
           setTimeout(() => {
-            expect(message).toEqual(testMessage);
+            try {
+              expect(message).toEqual(testMessage);
 
-            // Increment counters
-            groupCounters[group] += 1;
-            clientCounters[client] += 1;
+              // Increment counters
+              groupCounters[group] += 1;
+              clientCounters[client] += 1;
 
-            // Acknowledge the message
-            acknowledgeMessage();
+              // Acknowledge the message
+              acknowledgeMessage();
 
-            // If all messages are done being delivered, wait for any extras and then run assertions
-            if (
-              messageCount === groupCounters[1] &&
-              messageCount === groupCounters[2] &&
-              messageCount === groupCounters[3]
-            ) {
-              setTimeout(() => {
-                expect(groupCounters[1]).toEqual(messageCount);
-                expect(groupCounters[2]).toEqual(messageCount);
-                expect(groupCounters[3]).toEqual(messageCount);
+              // If all messages are done being delivered, wait for any extras and then run assertions
+              if (
+                messageCount === groupCounters[1] &&
+                messageCount === groupCounters[2] &&
+                messageCount === groupCounters[3]
+              ) {
+                setTimeout(() => {
+                  try {
+                    expect(groupCounters[1]).toEqual(messageCount);
+                    expect(groupCounters[2]).toEqual(messageCount);
+                    expect(groupCounters[3]).toEqual(messageCount);
 
-                expect(clientCounters[1]).toBeGreaterThan(20);
-                expect(clientCounters[2]).toBeGreaterThan(20);
-                expect(clientCounters[3]).toBeGreaterThan(20);
+                    expect(clientCounters[1]).toBeGreaterThan(20);
+                    expect(clientCounters[2]).toBeGreaterThan(20);
+                    expect(clientCounters[3]).toBeGreaterThan(20);
 
-                res();
-              }, 100);
+                    res();
+                  } catch (e) {
+                    rej(e);
+                  }
+                }, 100);
+              }
+            } catch (e) {
+              rej(e);
             }
           }, 20);
         }
@@ -304,7 +314,9 @@ describe('Event specific behavior', () => {
       })
         // After the messages are all resolved we want to clean up the clients
         .then(cleanupExtraClients)
-        .catch(error => cleanupExtraClients().then(() => Promise.reject(error)))
+        .catch((error) =>
+          cleanupExtraClients().then(() => Promise.reject(error)),
+        )
     );
   });
 
@@ -325,8 +337,12 @@ describe('Event specific behavior', () => {
           if (counter === messageCount) {
             setTimeout(() => {
               // delaying assertions to allow any stragglers to be processed
-              expect(counter).toEqual(messageCount);
-              res();
+              try {
+                expect(counter).toEqual(messageCount);
+                res();
+              } catch (e) {
+                rej(e);
+              }
             }, 500);
           }
         };
@@ -347,10 +363,14 @@ describe('Event specific behavior', () => {
                 rej,
                 async ({ message, acknowledgeMessage }) => {
                   setTimeout(() => {
-                    acknowledgeMessage();
-                    expect(message).toEqual(testMessage);
-                    counter += 1;
-                    checkCompletion();
+                    try {
+                      acknowledgeMessage();
+                      expect(message).toEqual(testMessage);
+                      counter += 1;
+                      checkCompletion();
+                    } catch (e) {
+                      rej(e);
+                    }
                   }, 20);
                 },
               ),
@@ -367,7 +387,9 @@ describe('Event specific behavior', () => {
       })
         // After the messages are all resolved we want to clean up the clients
         .then(cleanupExtraClients)
-        .catch(error => cleanupExtraClients().then(() => Promise.reject(error)))
+        .catch((error) =>
+          cleanupExtraClients().then(() => Promise.reject(error)),
+        )
     );
   });
 
@@ -436,27 +458,35 @@ describe('Event specific behavior', () => {
 
         function handleMessage({ group, acknowledgeMessage, message }) {
           setTimeout(() => {
-            expect(message).toEqual(testMessage);
+            try {
+              expect(message).toEqual(testMessage);
 
-            // Increment counters
-            groupCounters[group] += 1;
+              // Increment counters
+              groupCounters[group] += 1;
 
-            // Acknowledge the message
-            acknowledgeMessage();
+              // Acknowledge the message
+              acknowledgeMessage();
 
-            // If all messages are done being delivered, wait for any extras and then run assertions
-            if (
-              messageCount === groupCounters[1] &&
-              messageCount === groupCounters[2] &&
-              messageCount === groupCounters[3]
-            ) {
-              setTimeout(() => {
-                expect(groupCounters[1]).toEqual(messageCount);
-                expect(groupCounters[2]).toEqual(messageCount);
-                expect(groupCounters[3]).toEqual(messageCount);
+              // If all messages are done being delivered, wait for any extras and then run assertions
+              if (
+                messageCount === groupCounters[1] &&
+                messageCount === groupCounters[2] &&
+                messageCount === groupCounters[3]
+              ) {
+                setTimeout(() => {
+                  try {
+                    expect(groupCounters[1]).toEqual(messageCount);
+                    expect(groupCounters[2]).toEqual(messageCount);
+                    expect(groupCounters[3]).toEqual(messageCount);
 
-                res();
-              }, 100);
+                    res();
+                  } catch (e) {
+                    rej(e);
+                  }
+                }, 100);
+              }
+            } catch (e) {
+              rej(e);
             }
           }, 20);
         }
@@ -543,7 +573,9 @@ describe('Event specific behavior', () => {
       })
         // After the messages are all resolved we want to clean up the clients
         .then(cleanupExtraClients)
-        .catch(error => cleanupExtraClients().then(() => Promise.reject(error)))
+        .catch((error) =>
+          cleanupExtraClients().then(() => Promise.reject(error)),
+        )
     );
   });
 });

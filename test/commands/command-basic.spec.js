@@ -1,6 +1,6 @@
-const { handlerTestEnhancer } = require('../util');
+const { clearAllMessages, handlerTestEnhancer } = require('../util');
 
-const { command1, createNewClient, group1, waitFor } = require('./util');
+const { topology, command1, createNewClient, group1 } = require('./util');
 
 describe('Commands General Behavior', () => {
   let client = createNewClient();
@@ -11,11 +11,12 @@ describe('Commands General Behavior', () => {
       .then(() => client.close())
       .then(() => {
         client = createNewClient();
+        return clearAllMessages(createNewClient, topology);
       });
   });
 
   afterAll(() => {
-    return waitFor(500).then(() => client.close());
+    return client.close();
   });
 
   it('Should be able to send and receive a command (string)', () => {
@@ -347,10 +348,14 @@ describe('Commands General Behavior', () => {
           firstHandlerCount + secondHandlerCount + thirdHandlerCount ===
           messageCount
         ) {
-          expect(firstHandlerCount).toEqual(10);
-          expect(secondHandlerCount).toEqual(0);
-          expect(thirdHandlerCount).toEqual(0);
-          res();
+          try {
+            expect(firstHandlerCount).toEqual(10);
+            expect(secondHandlerCount).toEqual(0);
+            expect(thirdHandlerCount).toEqual(0);
+            res();
+          } catch (e) {
+            rej(e);
+          }
         }
       };
 
@@ -427,6 +432,7 @@ describe('Commands General Behavior', () => {
 
     const messageCount = 10;
     expect.assertions(messageCount + 3);
+
     return (
       new Promise(async (res, rej) => {
         const testMessage = 'three clients';
@@ -440,10 +446,14 @@ describe('Commands General Behavior', () => {
             firstHandlerCount + secondHandlerCount + thirdHandlerCount ===
             messageCount
           ) {
-            expect(firstHandlerCount).toBeGreaterThan(0);
-            expect(secondHandlerCount).toBeGreaterThan(0);
-            expect(thirdHandlerCount).toBeGreaterThan(0);
-            res();
+            try {
+              expect(firstHandlerCount).toBeGreaterThan(0);
+              expect(secondHandlerCount).toBeGreaterThan(0);
+              expect(thirdHandlerCount).toBeGreaterThan(0);
+              res();
+            } catch (e) {
+              rej(e);
+            }
           }
         };
 
@@ -511,7 +521,9 @@ describe('Commands General Behavior', () => {
       })
         // After the messages are all resolved we want to clean up the clients
         .then(cleanupExtraClients)
-        .catch(error => cleanupExtraClients().then(() => Promise.reject(error)))
+        .catch((error) =>
+          cleanupExtraClients().then(() => Promise.reject(error)),
+        )
     );
   });
 

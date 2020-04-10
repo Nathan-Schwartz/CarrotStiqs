@@ -29,7 +29,7 @@ function wrappedInitializeConsumerGroup({
   publisherConnection,
   topology,
   topologyState,
-}: {
+}: {|
   channels: Array<*>,
   consumerConnection: *,
   consumerGroupHasBeenInitialized: { [groupName: string]: boolean | void },
@@ -38,12 +38,12 @@ function wrappedInitializeConsumerGroup({
   publisherConnection: *,
   topology: TopologyType,
   topologyState: TopologyStateType,
-}): * {
+|}): * {
   //
   // Publisher setup
   //
   const publisherChannel = publisherConnection.createChannel({
-    setup: function() {},
+    setup: function () {},
   });
 
   channels.push(publisherChannel);
@@ -74,15 +74,15 @@ function wrappedInitializeConsumerGroup({
       );
     }
 
-    const missingEvents = groupConfig.events.filter(event => !events[event]);
+    const missingEvents = groupConfig.events.filter((event) => !events[event]);
     const missingCommands = groupConfig.commands.filter(
-      command => !commands[command],
+      (command) => !commands[command],
     );
     const extraneousEvents = Object.keys(events).filter(
-      event => !groupConfig.events.includes(event),
+      (event) => !groupConfig.events.includes(event),
     );
     const extraneousCommands = Object.keys(commands).filter(
-      command => !groupConfig.commands.includes(command),
+      (command) => !groupConfig.commands.includes(command),
     );
 
     if (extraneousEvents.length > 0) {
@@ -186,7 +186,7 @@ function wrappedInitializeConsumerGroup({
                   channel.ack(message);
                 }
               })
-              .catch(err => {
+              .catch((err) => {
                 handled = false;
                 throw err;
               });
@@ -196,7 +196,7 @@ function wrappedInitializeConsumerGroup({
         };
       }
 
-      return handler(handlerArgs).catch(err => {
+      return handler(handlerArgs).catch((err) => {
         if (message !== null && message !== undefined) {
           channel.reject(message, false);
         }
@@ -212,14 +212,14 @@ function wrappedInitializeConsumerGroup({
 
     function setupConsumers(
       config: { [string]: MessageHandlerConfigType },
-      getQueue: string => string,
+      getQueue: (string) => string,
     ): Promise<*> {
       return Promise.all(
-        Object.keys(config).map(key => {
+        Object.keys(config).map((key) => {
           const { prefetch, handler } = config[key];
 
           const channelWrapper = consumerConnection.createChannel({
-            setup: function(channel: ConfirmChannel): Promise<void> {
+            setup: function (channel: ConfirmChannel): Promise<void> {
               channel.prefetch(prefetch);
 
               return channel
@@ -233,7 +233,7 @@ function wrappedInitializeConsumerGroup({
                   ),
                   { noAck: false },
                 )
-                .catch(err =>
+                .catch((err) =>
                   logger.error(`Consuming ${getQueue(key)} failed:`, err),
                 );
             },
@@ -249,14 +249,14 @@ function wrappedInitializeConsumerGroup({
     return topologyState.promise
       .then(() =>
         Promise.all([
-          setupConsumers(events, event => `event.${groupName}.${event}`),
-          setupConsumers(commands, command => `command.${command}`),
+          setupConsumers(events, (event) => `event.${groupName}.${event}`),
+          setupConsumers(commands, (command) => `command.${command}`),
         ]),
       )
       .then(() => {
         consumerGroupHasBeenInitialized[groupName] = true;
       })
-      .catch(err => {
+      .catch((err) => {
         logger.error(
           '[CarrotStiqs] Error setting up consumers, this will not be automatically retried.',
           err,

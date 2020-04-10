@@ -1,0 +1,19 @@
+# This file will be extended with any CI specific configs we may need.
+version: '2'
+services:
+
+  carrotstiqs-rabbitmq:
+    extends:
+      file: docker-compose.base.yml
+      service: carrotstiqs-rabbitmq
+    container_name: carrotstiqs_ci
+
+  carrotstiqs:
+    container_name: carrotstiqs
+    env_file:
+      - .docker.env
+    build:
+      context: ../
+      dockerfile: docker/carrotstiqs_tests.Dockerfile
+      args:
+        NPM_TOKEN: $NPM_TOKEN
