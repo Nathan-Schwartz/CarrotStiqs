@@ -27,7 +27,7 @@ const topology = {
 };
 
 const connectionUrls = [
-  process.env.CLOUDAMQP_URL || 'amqp://guest:guest@localhost:5672',
+  process.env.AMQP_URL || 'amqp://guest:guest@localhost:5672',
 ];
 
 const createNewClient = () =>

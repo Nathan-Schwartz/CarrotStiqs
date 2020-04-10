@@ -7,12 +7,10 @@ describe('Commands General Behavior', () => {
 
   // We wait in order to avoid inconsistent errors closing channels.
   beforeEach(() => {
-    return waitFor(500)
-      .then(() => client.close())
-      .then(() => {
-        client = createNewClient();
-        return clearAllMessages(createNewClient, topology);
-      });
+    return client.close().then(() => {
+      client = createNewClient();
+      return clearAllMessages(createNewClient, topology);
+    });
   });
 
   afterAll(() => {

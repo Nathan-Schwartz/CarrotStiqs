@@ -1,9 +1,53 @@
-version: 2.0
+version: 2.1
+
+workflows:
+  version: 2
+
+  pr_pipeline:
+    jobs:
+      - install
+      - lint:
+          requires:
+            - install
+      - flowtype:
+          requires:
+            - install
+      - test:
+          requires:
+            - install
 
 jobs:
-  setup_docker:
+  install:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run: yarn install
+      - save-modules
+
+  flowtype:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore-modules
+      - run: yarn run flow
+
+  lint:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore-modules
+      - run: yarn run lint
+
+  test:
+    docker:
+      - image: circleci/node:10
     description: Start RabbitMQ container
     steps:
+      - checkout
+      - restore-modules
       - setup_remote_docker:
           version: 18.06.0-ce
       - run:
@@ -12,36 +56,25 @@ jobs:
             docker --version
             docker run hello-world
       - run:
-          name: Docker Compose Up
+          name: docker-compose up
           command: docker-compose -f docker/docker-compose.ci.yml up -d --build
-
-  install:
-    steps:
-      - yarn install
-  run_tests:
-    steps:
+      # The server isn't ready immediately, we give it 30 seconds to warm up first.
+      - run: sleep 30
       - run: docker exec -i carrotstiqs bash -c "yarn run test"
-  check_types:
+
+commands:
+  save-modules:
+    description: Saves node_modules
     steps:
-      - run: yarn run flow
-  check_linting:
+      - save_cache:
+          key: carrotstiqs-{{ checksum "./yarn.lock" }}-{{ .Branch }}
+          paths:
+            - ./node_modules
+  restore-modules:
+    description: Saves node_modules
     steps:
-      - run: yarn run lint
-
-workflows:
-  version: 2
-
-  PR_pipeline:
-    jobs:
-      - install
-      - check_linting:
-          requires:
-            - install
-      - check_types:
-          requires:
-
-      # - setup_docker
-      # - run_tests:
-      #     requires:
-      #       - install
-      #       - setup_docker
+      - restore_cache:
+          name: Restoring node_modules
+          keys:
+            - carrotstiqs-{{ checksum "./yarn.lock" }}-{{ .Branch }}
+            - carrotstiqs-{{ checksum "./yarn.lock" }}
