@@ -26,7 +26,7 @@ $ npm i carrotstiqs
 - Prefer publish confirmation
 - Prefer ack mode on consumers
 - Using RabbitMQ (Other implementations of AMQP may work, but are not supported)
-
+- Official support is limited to Node 10+
 
 ### API Walkthrough
 > For more detailed information about types or behaviors please review the types in the source code or the tests, respectively.
@@ -131,7 +131,6 @@ Originally authored by Nathan Schwartz and Taylor King as part of their work on 
 - Identify and manage slow connsumers
 - Streamline testing approach and write more integration tests
 - Delete queues and exchanges between test suites instead of running a temp client
-- Support earlier Node versions
 - Version exchanges and queues
 - Introduce "strict mode", which defaults to true. Opting out would bypass most validations
 - Ack batching like [rabbot](https://github.com/arobson/rabbot/)

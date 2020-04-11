@@ -17,7 +17,7 @@
     "url": "https://github.com/Nathan-Schwartz/CarrotStiqs.git"
   },
   "dependencies": {
-    "amqp-connection-manager": "^2.2.0",
+    "amqp-connection-manager": "^3.2.0",
     "amqplib": "^0.5.2",
     "bluebird": "^3.5.2",
     "es6-error": "^4.1.1",
