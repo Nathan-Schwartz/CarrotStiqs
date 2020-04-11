@@ -18,6 +18,7 @@ workflows:
 
 jobs:
   install:
+    working_directory: ~/CarrotStiqs
     docker:
       - image: circleci/node:10
     steps:
@@ -26,6 +27,7 @@ jobs:
       - save-modules
 
   flowtype:
+    working_directory: ~/CarrotStiqs
     docker:
       - image: circleci/node:10
     steps:
@@ -34,6 +36,7 @@ jobs:
       - run: yarn run flow
 
   lint:
+    working_directory: ~/CarrotStiqs
     docker:
       - image: circleci/node:10
     steps:
@@ -42,6 +45,7 @@ jobs:
       - run: yarn run lint
 
   test:
+    working_directory: ~/CarrotStiqs
     docker:
       - image: circleci/node:10
     description: Start RabbitMQ container
@@ -61,6 +65,9 @@ jobs:
       # The server isn't ready immediately, we give it 30 seconds to warm up first.
       - run: sleep 30
       - run: docker exec -i carrotstiqs bash -c "yarn run test"
+      - run: pwd
+      - run: docker exec -i carrotstiqs bash -c "pwd"
+      - run: docker exec -i carrotstiqs bash -c "cat coverage/lcov.info" | sed "s/\/var\/CarrotStiqs/\/home\/circleci\/CarrotStiqs/g" | yarn report-coverage
 
 commands:
   save-modules:
