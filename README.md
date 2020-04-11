@@ -1,4 +1,5 @@
 [![CircleCI](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs.svg?style=shield)](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs) [![dependencies Status](https://david-dm.org/Nathan-Schwartz/carrotstiqs/status.svg)](https://david-dm.org/Nathan-Schwartz/carrotstiqs) [![NPM version](https://img.shields.io/npm/v/carrotstiqs.svg)](https://www.npmjs.com/package/carrotstiqs) [![Coverage Status](https://coveralls.io/repos/github/Nathan-Schwartz/CarrotStiqs/badge.svg)](https://coveralls.io/github/Nathan-Schwartz/CarrotStiqs)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNathan-Schwartz%2FCarrotStiqs.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FNathan-Schwartz%2FCarrotStiqs?ref=badge_shield)
 
 ## CarrotStiqs
 
@@ -134,3 +135,7 @@ Originally authored by Nathan Schwartz and Taylor King as part of their work on 
 - Version exchanges and queues
 - Introduce "strict mode", which defaults to true. Opting out would bypass most validations
 - Ack batching like [rabbot](https://github.com/arobson/rabbot/)
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNathan-Schwartz%2FCarrotStiqs.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FNathan-Schwartz%2FCarrotStiqs?ref=badge_large)
