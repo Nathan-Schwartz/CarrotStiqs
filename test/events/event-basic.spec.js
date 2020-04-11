@@ -24,6 +24,8 @@ describe('Events General Behavior', () => {
 
   it('Should be able to send and receive an event (string)', () => {
     expect.assertions(1);
+    jest.setTimeout(30000);
+
     return new Promise(async (res, rej) => {
       const testMessage = 'one event';
 
@@ -52,6 +54,8 @@ describe('Events General Behavior', () => {
 
   it('Should be able to send and receive a command (buffer)', () => {
     expect.assertions(1);
+    jest.setTimeout(30000);
+
     return new Promise(async (res, rej) => {
       const testMessageBuffer = Buffer.from('one event');
       const testMessageString = 'one event';
