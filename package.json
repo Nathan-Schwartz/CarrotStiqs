@@ -9,7 +9,8 @@
     "benchmark": "yarn build && node ./benchmarks/index.js",
     "flow": "flow",
     "lint": "eslint src test",
-    "report-coverage": "yarn run coveralls -v"
+    "report-coverage": "yarn run coveralls -v",
+    "wipeRabbitMQ": "node wipeRabbitMQ.js"
   },
   "license": "MIT",
   "repository": {
