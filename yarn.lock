@@ -1367,12 +1367,12 @@ ajv@^6.10.0, ajv@^6.10.2, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-amqp-connection-manager@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/amqp-connection-manager/-/amqp-connection-manager-2.2.0.tgz#6871f36fc2d4c4ce95409e7b9633897b6a4f69bf"
-  integrity sha512-wR7t4Gkq532yR+vjTSksKGVA9vVlFkXvXcKdw0/QIJaH/piL3pqJWlCbUI2srFArOb/wdTe7BZ5VViwOYEdihA==
+amqp-connection-manager@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/amqp-connection-manager/-/amqp-connection-manager-3.2.0.tgz#83534360533a48183113f8213af0d230c7b8d461"
+  integrity sha512-CnxBqUXd6ft4DbGs8YXNp0hDZgWiDQAghxG6JRJuxGbGEQdAjsb4oRR9PWBqO5V/Gssp7lDKigXX+DtSczID2w==
   dependencies:
-    promise-breaker "^4.1.2"
+    promise-breaker "^5.0.0"
 
 amqplib@^0.5.2:
   version "0.5.2"
@@ -5516,10 +5516,10 @@ progress@^2.0.0:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-promise-breaker@^4.1.2:
-  version "4.1.11"
-  resolved "https://registry.yarnpkg.com/promise-breaker/-/promise-breaker-4.1.11.tgz#c9cbd28a3c5627451ad2e3eabcc3e4617bf97491"
-  integrity sha512-pzp+uNPxHofRhgZ27y+94Kj87fNX2Mu9A9HGpTQQWdyzMpfYT419lhE32zWnqhUCQVrXmvYPDw76pnrwWc+BpQ==
+promise-breaker@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/promise-breaker/-/promise-breaker-5.0.0.tgz#58e8541f1619554057da95a211794d7834d30c1d"
+  integrity sha512-mgsWQuG4kJ1dtO6e/QlNDLFtMkMzzecsC69aI5hlLEjGHFNpHrvGhFi4LiK5jg2SMQj74/diH+wZliL9LpGsyA==
 
 prompts@^2.0.1:
   version "2.1.0"
