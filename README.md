@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs.svg?style=shield)](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs) [![dependencies Status](https://david-dm.org/Nathan-Schwartz/carrotstiqs/status.svg)](https://david-dm.org/Nathan-Schwartz/carrotstiqs) [![NPM version](https://img.shields.io/npm/v/carrotstiqs.svg)](https://www.npmjs.com/package/carrotstiqs) [![Coverage Status](https://coveralls.io/repos/github/Nathan-Schwartz/CarrotStiqs/badge.svg)](https://coveralls.io/github/Nathan-Schwartz/CarrotStiqs)
+
 ## CarrotStiqs
 
 > A declarative API for asynchronous messaging with RabbitMQ.
