@@ -1,4 +1,9 @@
-[![CircleCI](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs.svg?style=shield)](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs) [![dependencies Status](https://david-dm.org/Nathan-Schwartz/carrotstiqs/status.svg)](https://david-dm.org/Nathan-Schwartz/carrotstiqs) [![NPM version](https://img.shields.io/npm/v/carrotstiqs.svg)](https://www.npmjs.com/package/carrotstiqs) [![Coverage Status](https://coveralls.io/repos/github/Nathan-Schwartz/CarrotStiqs/badge.svg)](https://coveralls.io/github/Nathan-Schwartz/CarrotStiqs)
+[![CircleCI](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs.svg?style=shield)](https://circleci.com/gh/Nathan-Schwartz/CarrotStiqs)
+[![dependencies Status](https://david-dm.org/Nathan-Schwartz/carrotstiqs/status.svg)](https://david-dm.org/Nathan-Schwartz/carrotstiqs)
+[![NPM version](https://img.shields.io/npm/v/carrotstiqs.svg)](https://www.npmjs.com/package/carrotstiqs)
+[![Coverage Status](https://coveralls.io/repos/github/Nathan-Schwartz/CarrotStiqs/badge.svg)](https://coveralls.io/github/Nathan-Schwartz/CarrotStiqs)
+[![Known Vulnerabilities](https://snyk.io/test/github/Nathan-Schwartz/carrotstiqs/badge.svg)](https://snyk.io/test/github/Nathan-Schwartz/carrotstiqs)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNathan-Schwartz%2FCarrotStiqs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FNathan-Schwartz%2FCarrotStiqs?ref=badge_shield)
 
 ## CarrotStiqs
 
