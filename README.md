@@ -127,7 +127,7 @@ Some benchmarks have been written for this library. They can be run with `npm ru
 
 ### Acknowledgements
 This library was inspired in part by [rabbot](https://github.com/arobson/rabbot/) and [moleculer](https://github.com/moleculerjs/moleculer).
-Originally authored by Nathan Schwartz and Taylor King as part of their work on the Merlin Platform.
+Originally authored by [Nathan Schwartz](https://github.com/Nathan-Schwartz) and [Taylor King](https://github.com/dekkofilms) as part of their work on the Merlin Platform.
 
 
 ### Enhancement ideas
