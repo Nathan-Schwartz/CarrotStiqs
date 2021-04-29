@@ -7,8 +7,6 @@ import type {
   DeadLetterConfigSafeType,
 } from './types';
 
-const Promise = require('bluebird');
-
 const {
   numberOfQueues,
   getRetryName,

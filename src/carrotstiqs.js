@@ -7,8 +7,6 @@ import type {
   DeadLetterConfigInputType,
 } from './types';
 
-const Promise = require('bluebird');
-
 const assertTopology = require('./assertTopology');
 const {
   CarrotStiqsError,

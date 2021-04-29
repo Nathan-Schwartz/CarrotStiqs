@@ -10,7 +10,6 @@ import type {
 } from './types';
 
 const curry = require('lodash.curry');
-const Promise = require('bluebird');
 
 const { logChannelEvents, CarrotStiqsError } = require('./util');
 

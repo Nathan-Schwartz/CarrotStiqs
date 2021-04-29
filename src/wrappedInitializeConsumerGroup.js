@@ -11,8 +11,6 @@ import type {
   TopologyType,
 } from './types';
 
-const Promise = require('bluebird');
-
 const {
   CarrotStiqsError,
   getTopicForWaitTime,
@@ -226,13 +224,14 @@ function wrappedInitializeConsumerGroup({
                 .consume(
                   getQueue(key),
                   handlerMiddleware(
-                    Promise.method(handler),
+                    async (...args) => handler(...args),
                     channel,
                     key,
                     getQueue(key),
                   ),
                   { noAck: false },
                 )
+                .then(() => {})
                 .catch((err) =>
                   logger.error(`Consuming ${getQueue(key)} failed:`, err),
                 );
