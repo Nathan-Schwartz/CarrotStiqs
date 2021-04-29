@@ -22,7 +22,7 @@ $ npm i carrotstiqs
 - Discover common issues quickly during development:
   - Misspellings of consumer group name, events, and commands
   - Forgetting to consume messages for a registered command/event
-- Reliably delivers message regardless of client crashes, AMQP broker crashes, or network otuuages
+- Reliably delivers message regardless of client crashes, AMQP broker crashes, or network outages
 
 
 ### Assumptions

@@ -87,7 +87,6 @@ rules:
   flowtype/sort-keys:
     - error
     - asc
-    - caseSensitive: true
   flowtype/type-id-match:
     - warn
     - ^([A-Z][a-z]*)+Type$

@@ -112,7 +112,7 @@ const numberOfQueues = 25;
 // Maxiumum amount of time a message could be delayed with this number of retry queues
 const maxDelay = Math.pow(2, numberOfQueues) - 1;
 
-const getTopicForWaitTime = (wait: number) => {
+const getTopicForWaitTime = (wait: number): string => {
   const binaryString = wait.toString(2);
 
   const missingDigits = numberOfQueues - binaryString.length;
@@ -125,14 +125,16 @@ const getTopicForWaitTime = (wait: number) => {
   return (prefix + binaryString).replace(/1/g, '1.').replace(/0/g, '0.');
 };
 
-const getRetryName = (number: number) => {
+const getRetryName = (
+  number: number,
+): {| messageTtl: number, name: string |} => {
   // We do -1 here because the first level should start at 1 (2^0)
   const messageTtl = Math.pow(2, number - 1) * 1000;
   const name = `retry.level-${number}`;
   return { messageTtl, name };
 };
 
-const buildPattern = (num: number, wait: boolean = true) => {
+const buildPattern = (num: number, wait: boolean = true): string => {
   const arr = Array(numberOfQueues).fill('*');
   arr[num - 1] = wait ? '1' : '0';
   arr.reverse();
